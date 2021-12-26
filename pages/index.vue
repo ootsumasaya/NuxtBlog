@@ -2,7 +2,7 @@
   <v-app >
     <navi />
     <v-main>
-    <h1>メイン</h1>
+    <h1>メインページ</h1>
     </v-main>
   </v-app>
 </template>
