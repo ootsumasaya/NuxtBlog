@@ -1,14 +1,14 @@
 <template>
-  <v-app >
+  <v-app>
     <navi />
     <v-main>
-    <h1>メインページ</h1>
+      <h1>メインページ2</h1>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import navi from '/components/navi';
+import navi from "/components/navi";
 
 export default {
   components: {
