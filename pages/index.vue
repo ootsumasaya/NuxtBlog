@@ -6,12 +6,6 @@
     <h1>メインページ</h1>
       <v-row>
     <v-col>
-      <video
-        class="preview"
-         :src="videoID + '/sample.mp4'"
-        controls
-        preload="metadata"
-      />
     </v-col>
   </v-row>
     </div>

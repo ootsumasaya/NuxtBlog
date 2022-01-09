@@ -74,8 +74,6 @@ export default {
       //glbファイルの読み込み
       const loader = new GLTFLoader();
       // こうしないとfunction内でsceneがないって言われる
-      var scene_tmp = this.scene;
-      var mixer_tmp = this.mixer;
       loader.load(
         "/test.glb",
         function (gltf) {
@@ -84,21 +82,19 @@ export default {
           model.rotation.y = THREE.Math.DEG2RAD * 90;
           model.rotation.x = THREE.Math.DEG2RAD * -90;
           model.rotation.z = THREE.Math.DEG2RAD * 0;
-          scene_tmp.add(model);
+          this.scene.add(model);
 
           // Animation
           let animations = gltf.animations;
-          mixer_tmp = new THREE.AnimationMixer(model);
-          let action = mixer_tmp.clipAction(animations[0]);
+          this.mixer = new THREE.AnimationMixer(model);
+          let action = this.mixer.clipAction(animations[0]);
           action.play();
-        },
+        }.bind(this),
         undefined,
         function (e) {
           console.error(e);
         }
       );
-      this.scene = scene_tmp;
-      this.mixer = mixer_tmp;
     },
 
     animate() {
