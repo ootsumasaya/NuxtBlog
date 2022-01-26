@@ -37,6 +37,10 @@ export default {
         text: 'GLBのテスト',
         link: '/glb',
       },
+      {
+        text: 'json読み込みテスト',
+        link: '/json'
+      }
     ],
   }),
 };
