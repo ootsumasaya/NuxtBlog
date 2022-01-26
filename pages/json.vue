@@ -20,6 +20,9 @@ export default {
   },
   data() {
     return {
+      files: null,
+      flame: 0,
+      meshes: [],
       camera: null,
       scene: null,
       renderer: null,
@@ -71,19 +74,44 @@ export default {
       axis.position.set(0, 0, 0);
       this.scene.add(axis);
 
-      // 箱を作成
-      const geometry = new THREE.BoxGeometry(400, 400, 400);
-      // マテリアルにテクスチャーを設定
-      const material = new THREE.MeshNormalMaterial();
-      // メッシュの作成
-      const box = new THREE.Mesh(geometry, material);
-      // シーンに追加
-      this.scene.add(box)
+      const glob = require("glob");
+      // ---------------------
+      const pattern = "/test/*.json";
+      // ---------------------
+      glob(pattern, function (err, files) {
+        if (err) {
+          console.log(err);
+        }
+        this.files = files;
+      });
+
+      for (let point = 0; point < 25; point++) {
+        // ジオメトリを作成
+        var geometry = new THREE.SphereGeometry();
+        // マテリアルにテクスチャーを設定
+        var material = new THREE.MeshNormalMaterial();
+        // メッシュの作成
+        var mesh = new THREE.Mesh(geometry, material);
+        // シーンに追加
+        this.scene.add(mesh);
+        // リストにメッシュを追加
+        this.meshes.push(mesh);
+      }
     },
 
     animate() {
       requestAnimationFrame(this.animate);
-
+      if (this.files.length < frame) {
+        frame = 0;
+      } else {
+        frame += 1;
+      }
+      const jsonObject = JSON.parse(this.files[frame]);
+      for (let point = 0; point < 25; point++) {
+        const x = jsonObject.people.pose_keypoints_2d[point * 3];
+        const y = jsonObject.people.pose_keypoints_2d[point * 3 + 1];
+        this.meshes[point].position.set(x, y, 0);
+      }
       this.renderer.render(this.scene, this.camera);
       // Controlの更新
       this.controls.update();
