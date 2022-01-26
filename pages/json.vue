@@ -99,18 +99,24 @@ export default {
 
     animate() {
       requestAnimationFrame(this.animate);
+      // フレームのループ
       if (this.files.length - 1 == this.frame) {
         this.frame = 0;
       } else {
         this.frame += 1;
       }
+      
+      // キーポイントごとにオブジェクトを移動
       for (let point = 0; point < 25; point++) {
+        // 腰(point=8)の座標を(0,0)に正規化
         const x = this.files[this.frame].people[0].pose_keypoints_2d[point * 3] - this.files[0].people[0].pose_keypoints_2d[8*3];
         const y =
           this.files[this.frame].people[0].pose_keypoints_2d[point * 3 + 1] - this.files[0].people[0].pose_keypoints_2d[8*3+1];
+        // オブジェクトの移動と大きさの調整
         this.meshes[point].position.x = x*0.1;
         this.meshes[point].position.y = y*0.1*-1;
       }
+
       this.renderer.render(this.scene, this.camera);
       // Controlの更新
       this.controls.update();
