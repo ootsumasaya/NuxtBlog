@@ -73,7 +73,6 @@ export default {
 
       //glbファイルの読み込み
       const loader = new GLTFLoader();
-      // こうしないとfunction内でsceneがないって言われる
       loader.load(
         "/test.glb",
         function (gltf) {
@@ -114,7 +113,7 @@ export default {
 
 <style scoped>
 #WebGL-output {
-  width: 1000px;
-  height: 1000px;
+  width: 500px;
+  height: 500px;
 }
 </style>

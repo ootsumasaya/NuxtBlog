@@ -40,7 +40,7 @@ export default {
       {
         text: 'json読み込みテスト',
         link: '/json'
-      }
+      },
     ],
   }),
 };

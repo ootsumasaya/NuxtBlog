@@ -2,8 +2,8 @@
   <v-app>
     <navi />
     <v-main>
-      <h1>GLBファイルの表示テスト</h1>
-      <div id="WebGL-output"></div>
+      <h1>jsonファイルの表示テスト</h1>
+      <div id="json-output"></div>
     </v-main>
   </v-app>
 </template>
@@ -12,7 +12,6 @@
 import navi from "/components/navi";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export default {
   components: {
@@ -20,8 +19,8 @@ export default {
   },
   data() {
     return {
-      files: null,
-      flame: 0,
+      files: [],
+      frame: 0,
       meshes: [],
       camera: null,
       scene: null,
@@ -34,7 +33,7 @@ export default {
   methods: {
     init() {
       // コンテナの指定
-      let container = document.getElementById("WebGL-output");
+      let container = document.getElementById("json-output");
 
       //シーンの作成
       this.scene = new THREE.Scene();
@@ -47,7 +46,7 @@ export default {
         1000
       );
       //カメラセット
-      this.camera.position.set(0, 0, 1);
+      this.camera.position.set(100, 100, 100);
       this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       //レンダラー
@@ -66,7 +65,7 @@ export default {
 
       //光源
       const dirLight = new THREE.SpotLight(0xffffff, 1.5); //color,強度
-      dirLight.position.set(0, 5, 5);
+      dirLight.position.set(200, 200, 200);
       this.scene.add(dirLight);
 
       // 軸の表示
@@ -74,22 +73,21 @@ export default {
       axis.position.set(0, 0, 0);
       this.scene.add(axis);
 
-      const glob = require("glob");
-      // ---------------------
-      const pattern = "/test/*.json";
-      // ---------------------
-      glob(pattern, function (err, files) {
-        if (err) {
-          console.log(err);
-        }
-        this.files = files;
-      });
+      // JSONの読み込み
+      const context = require.context("../static/test/", false, /\.json$/);
+      const filenames = context.keys();
+      for (let name of filenames) {
+        this.files.push(
+          JSON.parse(JSON.stringify(require("../static/test" + name.substr(1))))
+        );
+      }
+
+      // ジオメトリを作成
+      var geometry = new THREE.BoxGeometry(1, 1, 1);
+      // マテリアルにテクスチャーを設定
+      var material = new THREE.MeshNormalMaterial();
 
       for (let point = 0; point < 25; point++) {
-        // ジオメトリを作成
-        var geometry = new THREE.SphereGeometry();
-        // マテリアルにテクスチャーを設定
-        var material = new THREE.MeshNormalMaterial();
         // メッシュの作成
         var mesh = new THREE.Mesh(geometry, material);
         // シーンに追加
@@ -101,16 +99,17 @@ export default {
 
     animate() {
       requestAnimationFrame(this.animate);
-      if (this.files.length < frame) {
-        frame = 0;
+      if (this.files.length - 1 == this.frame) {
+        this.frame = 0;
       } else {
-        frame += 1;
+        this.frame += 1;
       }
-      const jsonObject = JSON.parse(this.files[frame]);
       for (let point = 0; point < 25; point++) {
-        const x = jsonObject.people.pose_keypoints_2d[point * 3];
-        const y = jsonObject.people.pose_keypoints_2d[point * 3 + 1];
-        this.meshes[point].position.set(x, y, 0);
+        const x = this.files[this.frame].people[0].pose_keypoints_2d[point * 3] - this.files[0].people[0].pose_keypoints_2d[8*3];
+        const y =
+          this.files[this.frame].people[0].pose_keypoints_2d[point * 3 + 1] - this.files[0].people[0].pose_keypoints_2d[8*3+1];
+        this.meshes[point].position.x = x*0.1;
+        this.meshes[point].position.y = y*0.1*-1;
       }
       this.renderer.render(this.scene, this.camera);
       // Controlの更新
@@ -125,8 +124,8 @@ export default {
 </script>
 
 <style scoped>
-#WebGL-output {
-  width: 1000px;
-  height: 1000px;
+#json-output {
+  width: 500px;
+  height: 500px;
 }
 </style>
