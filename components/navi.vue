@@ -33,6 +33,14 @@ export default {
         text: '型',
         link: '/kata',
       },
+      {
+        text: 'GLBのテスト',
+        link: '/glb',
+      },
+      {
+        text: 'json読み込みテスト',
+        link: '/json'
+      },
     ],
   }),
 };
