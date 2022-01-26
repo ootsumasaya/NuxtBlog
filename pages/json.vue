@@ -2,7 +2,7 @@
   <v-app>
     <navi />
     <v-main>
-      <h1>jsonファイルの表示テスト</h1>
+      <h1>JSON読み込みテスト</h1>
       <div id="json-output"></div>
     </v-main>
   </v-app>
@@ -105,7 +105,7 @@ export default {
       } else {
         this.frame += 1;
       }
-      
+
       // キーポイントごとにオブジェクトを移動
       for (let point = 0; point < 25; point++) {
         // 腰(point=8)の座標を(0,0)に正規化
